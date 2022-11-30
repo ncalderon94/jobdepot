@@ -16,7 +16,7 @@ The application has the functionability of:
 **1.** Use the following command to clone the laravel-app code from my [GitHub repository](https://github.com/ncalderon94/feedback-form.git) into your machine.
 
 ```
-git clone https://github.com/ncalderon94/laravel-app.git
+git clone https://github.com/ncalderon94/jobdepot.git
 ```
 
 Note: Make sure to run the ``` git clone ``` command on the directory that you would like the app to be downloaded.  
