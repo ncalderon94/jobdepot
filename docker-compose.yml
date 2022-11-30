@@ -1,0 +1,152 @@
+version: '3'
+services:
+  
+  #PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    #image: dockerhub user name / repository name
+    image: ncalderon94/laravelapp
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+
+  #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8080:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/  
+    networks:
+      - app-network
+
+  #MySQL Service
+  db:
+    image: mysql
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: ncalderon
+      MYSQL_PASSWORD: welcome123
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network  
+
+  #phpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - PMA_ARBITRARY=1
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# version: '3'
+
+# networks:
+#   laravel:
+
+# services:
+  
+#   web: 
+#     image: ncalderon94/laravelapp
+#     container_name: nginx-container
+#     ports:
+#       - "8080:80"
+#     volumes:
+#       - ./app:/usr/share/nginx/html
+#     depends_on:
+#       - mysql_db 
+#     networks:
+#       - laravel
+
+#   mysql_db:
+#     image: mysql:latest
+#     container_name: mysql_db
+#     restart: unless-stopped
+#     tty: true
+#     ports:
+#       - "83:3306"
+#     environment:
+#       MYSQL_ROOT_PASSWORD: root
+#       MYSQL_DATABASE: gigs-db
+#       MYSQL_USER: ncalderon
+#       MYSQL_PASSWORD: welcome123
+#     networks:
+#       - laravel
+
+#   phpmyadmin:
+#     image: phpmyadmin
+#     restart: always
+#     ports:
+#       - "84:80"
+#     environment:
+#       - PMA_ARBITRARY=1
+#     networks:
+#       - laravel
+
+
+# # composer
+# # artisan
+ 
